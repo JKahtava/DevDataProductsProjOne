@@ -1,30 +1,28 @@
 ---
 title: "Developing Data Products Project One"
 author: "Jussi Kahtava"
-date: "16 November 2016"
+date: "17 November 2016"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, echo = FALSE, message=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(leaflet)
 ```
 
-## R Markdown
+## 17th November, 2016
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+### ZIP codes in Baltimore, MD.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r zipcodes, echo = FALSE, message = FALSE}
+zip_codes <- read.csv("./zip_codes_states.csv", header = TRUE, stringsAsFactors = FALSE)
+md_zips <- zip_codes[zip_codes$state == "MD", ]
+names(md_zips) <- c("zip","lat","lon","city","state","county")
+baltimore_zips <- md_zips[md_zips$city == "Baltimore", ]
+zip_code <- as.character(baltimore_zips$zip)
+baltimore_zips %>%
+  leaflet() %>%
+  addTiles() %>%
+  addMarkers(popup = zip_code)
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
